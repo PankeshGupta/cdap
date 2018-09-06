@@ -416,24 +416,38 @@ class HydratorPlusPlusConfigStore {
     return this.getConfig().properties;
   }
   setProperties(properties) {
+    let numExecutorKey = 'system.spark.spark.executor.instances';
+    let numExecutorOldKey = 'system.spark.spark.master';
+    let backPressureKey = 'system.spark.spark.streaming.backpressure.enabled';
     if (typeof properties !== 'undefined' && Object.keys(properties).length > 0) {
       this.state.config.properties = properties;
     } else {
       this.state.config.properties = {};
     }
     if (this.state.artifact.name === this.GLOBALS.etlDataStreams) {
-      this.state.config.properties['system.spark.spark.streaming.backpressure.enabled'] = true;
-      this.state.config.properties['system.spark.spark.executor.instances'] = 1;
-      if (this.state.config.properties.hasOwnProperty('system.spark.spark.master')) {
-        let formattedNum = this.state.config.properties['system.spark.spark.master'];
-        this.state.config.properties['system.spark.spark.executor.instances'] = formattedNum.substring(6, formattedNum.length - 1);
-        delete this.state.config.properties['system.spark.spark.master'];
+      if (typeof this.state.config.properties[backPressureKey] === 'undefined') {
+        this.state.config.properties[backPressureKey] = true;
+      }
+    }
+    if (this.getEngine() === 'spark' || this.state.artifact.name === this.GLOBALS.etlDataStreams) {
+      this.state.config.properties[numExecutorKey] = this.state.config.properties[numExecutorKey] || 1;
+      if (this.state.config.properties.hasOwnProperty(numExecutorOldKey)) {
+        let formattedNum = this.state.config.properties[numExecutorOldKey];
+        formattedNum = typeof formattedNum === 'string' ? formattedNum.substring(6, formattedNum.length - 1) : formattedNum;
+        this.state.config.properties[numExecutorKey] = formattedNum;
+        delete this.state.config.properties[numExecutorOldKey];
       }
     }
   }
   getCustomConfig() {
     let customConfig = {};
+    // We hide these two properties from showing up in key value pairs in realtime pipeline
+    // In batch if the engine is spark we should not hide these properties. We should show
+    // the custom properties
     let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
+    if (this.state.artifact.name !== this.GLOBALS.etlDataStreams) {
+      backendProperties = [];
+    }
     for (let key in this.state.config.properties) {
       if (this.state.config.properties.hasOwnProperty(key) && backendProperties.indexOf(key) === -1) {
         customConfig[key] = this.state.config.properties[key];
@@ -494,7 +508,7 @@ class HydratorPlusPlusConfigStore {
     if (this.myHelpers.objectQuery(this.state, 'config', 'properties', 'system.spark.spark.executor.instances')) {
       return this.state.config.properties['system.spark.spark.executor.instances'].toString();
     }
-    return 1;
+    return '1';
   }
   setNumExecutors(num) {
     this.state.config.properties['system.spark.spark.executor.instances'] = num;

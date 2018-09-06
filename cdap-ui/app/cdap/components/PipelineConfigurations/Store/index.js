@@ -118,8 +118,11 @@ const DEFAULT_CONFIGURE_OPTIONS = {
 
 };
 
-const getCustomConfigFromProperties = (properties = {}) => {
-  const backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
+const getCustomConfigFromProperties = (properties = {}, isBatch) => {
+  let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
+  if (isBatch) {
+    backendProperties = [];
+  }
   let customConfig = {};
   Object.keys(properties).forEach(key => {
     if (backendProperties.indexOf(key) === -1) {
@@ -129,8 +132,8 @@ const getCustomConfigFromProperties = (properties = {}) => {
   return customConfig;
 };
 
-const getCustomConfigForDisplay = (properties, engine) => {
-  let currentCustomConfig = getCustomConfigFromProperties(properties);
+const getCustomConfigForDisplay = (properties, engine, isBatch) => {
+  let currentCustomConfig = getCustomConfigFromProperties(properties, engine, isBatch);
   let customConfigForDisplay = {};
   for (let key in currentCustomConfig) {
     if (currentCustomConfig.hasOwnProperty(key)) {
@@ -222,7 +225,7 @@ const configure = (state = DEFAULT_CONFIGURE_OPTIONS, action = defaultAction) =>
       return {
         ...state,
         ...action.payload,
-        customConfigKeyValuePairs: getCustomConfigForDisplay(action.payload.properties, action.payload.engine)
+        customConfigKeyValuePairs: getCustomConfigForDisplay(action.payload.properties, action.payload.engine, state.pipelineVisualConfiguration.isBatch)
       };
     case ACTIONS.SET_RUNTIME_ARGS:
       return {
