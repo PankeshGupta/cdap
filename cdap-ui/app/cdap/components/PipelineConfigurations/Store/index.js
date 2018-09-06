@@ -119,7 +119,7 @@ const DEFAULT_CONFIGURE_OPTIONS = {
 };
 
 const getCustomConfigFromProperties = (properties = {}) => {
-  const backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances', 'system.spark.spark.master'];
+  const backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
   let customConfig = {};
   Object.keys(properties).forEach(key => {
     if (backendProperties.indexOf(key) === -1) {

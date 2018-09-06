@@ -105,6 +105,7 @@ class HydratorPlusPlusConfigStore {
         this.setBatchInterval(this.state.config.batchInterval);
       } else {
         this.setEngine(this.state.config.engine);
+        this.setProperties(this.state.config.properties);
         this.setNumRecordsPreview(this.state.config.numOfRecordsPreview);
         this.setMaxConcurrentRuns(this.state.config.maxConcurrentRuns);
       }
@@ -179,7 +180,9 @@ class HydratorPlusPlusConfigStore {
             outputSchema.fields = outputSchema.fields.filter( field => !field.readonly);
           }
           node.plugin.properties[node.outputSchemaProperty] = JSON.stringify(outputSchema);
-        } catch (e) {}
+        } catch (e) {
+          console.log('Failed to parse output schema of plugin: ', node.plugin);
+        }
       }
       node.plugin.properties = stripFormatSchemas(node.watchProperty, node.outputSchemaProperty, angular.copy(node.plugin.properties));
 
@@ -417,15 +420,20 @@ class HydratorPlusPlusConfigStore {
       this.state.config.properties = properties;
     } else {
       this.state.config.properties = {};
-      if (this.state.artifact.name === this.GLOBALS.etlDataStreams) {
-        this.state.config.properties['system.spark.spark.streaming.backpressure.enabled'] = true;
-        this.state.config.properties['system.spark.spark.executor.instances'] = 1;
+    }
+    if (this.state.artifact.name === this.GLOBALS.etlDataStreams) {
+      this.state.config.properties['system.spark.spark.streaming.backpressure.enabled'] = true;
+      this.state.config.properties['system.spark.spark.executor.instances'] = 1;
+      if (this.state.config.properties.hasOwnProperty('system.spark.spark.master')) {
+        let formattedNum = this.state.config.properties['system.spark.spark.master'];
+        this.state.config.properties['system.spark.spark.executor.instances'] = formattedNum.substring(6, formattedNum.length - 1);
+        delete this.state.config.properties['system.spark.spark.master'];
       }
     }
   }
   getCustomConfig() {
     let customConfig = {};
-    let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances', 'system.spark.spark.master'];
+    let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
     for (let key in this.state.config.properties) {
       if (this.state.config.properties.hasOwnProperty(key) && backendProperties.indexOf(key) === -1) {
         customConfig[key] = this.state.config.properties[key];
@@ -483,18 +491,10 @@ class HydratorPlusPlusConfigStore {
     }
   }
   getNumExecutors() {
-    if (this.isDistributed) {
-      if (this.myHelpers.objectQuery(this.state, 'config', 'properties', 'system.spark.spark.executor.instances')) {
-        return this.state.config.properties['system.spark.spark.executor.instances'].toString();
-      }
-    } else {
-      // format on standalone is 'local[{number}]'
-      if (this.myHelpers.objectQuery(this.state, 'config', 'properties', 'system.spark.spark.master')) {
-        let formattedNum = this.state.config.properties['system.spark.spark.master'];
-        return formattedNum.substring(6, formattedNum.length - 1);
-      }
-      return '1';
+    if (this.myHelpers.objectQuery(this.state, 'config', 'properties', 'system.spark.spark.executor.instances')) {
+      return this.state.config.properties['system.spark.spark.executor.instances'].toString();
     }
+    return 1;
   }
   setNumExecutors(num) {
     this.state.config.properties['system.spark.spark.executor.instances'] = num;
@@ -681,7 +681,9 @@ class HydratorPlusPlusConfigStore {
       }
 
       outputSchema = [this.HydratorPlusPlusNodeService.getOutputSchemaObj(JSON.stringify(schema))];
-    } catch (e) {}
+    } catch (e) {
+      console.log('Failed to parse output schema of plugin: ', pluginId);
+    }
 
     traverseMap(adjacencyMap[pluginId], outputSchema, inputSchema);
   }
