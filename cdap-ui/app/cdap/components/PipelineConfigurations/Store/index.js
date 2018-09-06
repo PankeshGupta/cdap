@@ -355,8 +355,8 @@ const configure = (state = DEFAULT_CONFIGURE_OPTIONS, action = defaultAction) =>
       };
     }
     case ACTIONS.SET_NUM_EXECUTORS: {
-      let numExecutorsKeyName = window.CDAP_CONFIG.isEnterprise ? 'system.spark.spark.executor.instances' : 'system.spark.spark.master';
-      let numExecutorsValue = window.CDAP_CONFIG.isEnterprise ? action.payload.numExecutors : `local[${action.payload.numExecutors}]`;
+      let numExecutorsKeyName = 'system.spark.spark.executor.instances';
+      let numExecutorsValue = action.payload.numExecutors;
       return {
         ...state,
         properties: {

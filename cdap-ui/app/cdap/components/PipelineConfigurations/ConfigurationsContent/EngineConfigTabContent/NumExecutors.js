@@ -26,7 +26,7 @@ import T from 'i18n-react';
 const PREFIX = 'features.PipelineConfigurations.EngineConfig';
 
 const mapStateToProps = (state) => {
-  let numExecutorsKeyName = window.CDAP_CONFIG.isEnterprise ? 'system.spark.spark.executor.instances' : 'system.spark.spark.master';
+  let numExecutorsKeyName = 'system.spark.spark.executor.instances';
   return {
     numExecutors: state.properties[numExecutorsKeyName]
   };

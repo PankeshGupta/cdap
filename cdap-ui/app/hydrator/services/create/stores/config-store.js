@@ -419,11 +419,7 @@ class HydratorPlusPlusConfigStore {
       this.state.config.properties = {};
       if (this.state.artifact.name === this.GLOBALS.etlDataStreams) {
         this.state.config.properties['system.spark.spark.streaming.backpressure.enabled'] = true;
-        if (this.isDistributed) {
-          this.state.config.properties['system.spark.spark.executor.instances'] = 1;
-        } else {
-          this.state.config.properties['system.spark.spark.master'] = 'local[1]';
-        }
+        this.state.config.properties['system.spark.spark.executor.instances'] = 1;
       }
     }
   }
@@ -501,11 +497,7 @@ class HydratorPlusPlusConfigStore {
     }
   }
   setNumExecutors(num) {
-    if (this.isDistributed) {
-      this.state.config.properties['system.spark.spark.executor.instances'] = num;
-    } else {
-      this.state.config.properties['system.spark.spark.master'] = `local[${num}]`;
-    }
+    this.state.config.properties['system.spark.spark.executor.instances'] = num;
   }
   getInstrumentation() {
     return this.getConfig().processTimingEnabled;
