@@ -1689,6 +1689,13 @@ features:
     pipelinesMessage: Pipelines
     subtitleMessage1: Here are some options on where to go next
     subtitleMessage2: View all your entities in the
+  Page500:
+    mainTitle: Unexpected error
+    secondaryTitle: We have encountered an error and could not load the page you requested
+    suggestion1Part1: Try to
+    suggestion1Part2: refresh
+    suggestion1Part3: the page
+    suggestion2: If you entered the url by hand, double check if that is correct
   Pagination:
     dropdown-label: Page
 
