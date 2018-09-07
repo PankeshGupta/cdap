@@ -27,7 +27,9 @@ export default function Page404({entityName, entityType, children}) {
   let namespace = NamespaceStore.getState().selectedNamespace;
   return (
     <div className="page-not-found">
-      <img src="/cdap_assets/img/404.png" />
+      <h1 className="error-main-title">
+        Page not found
+      </h1>
       <h1>
         <strong>
           {
