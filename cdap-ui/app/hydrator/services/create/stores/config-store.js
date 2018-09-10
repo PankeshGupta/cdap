@@ -434,9 +434,11 @@ class HydratorPlusPlusConfigStore {
     ) {
       this.state.config.properties[numExecutorKey] = this.state.config.properties[numExecutorKey] || 1;
       if (this.state.config.properties.hasOwnProperty(numExecutorOldKey)) {
-        let formattedNum = this.state.config.properties[numExecutorOldKey];
-        formattedNum = typeof formattedNum === 'string' ? formattedNum.substring(6, formattedNum.length - 1) : formattedNum;
-        this.state.config.properties[numExecutorKey] = formattedNum;
+        // format on standalone is 'local[{number}] === local[2]'
+        // So the magic number 6 here is for skipping 'local[' and get the number
+        let numOfExecutors = this.state.config.properties[numExecutorOldKey];
+        numOfExecutors = typeof numOfExecutors === 'string' ? numOfExecutors.substring(6, numOfExecutors.length - 1) : numOfExecutors;
+        this.state.config.properties[numExecutorKey] = numOfExecutors;
         delete this.state.config.properties[numExecutorOldKey];
       }
     }
