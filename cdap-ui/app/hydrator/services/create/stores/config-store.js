@@ -105,7 +105,6 @@ class HydratorPlusPlusConfigStore {
         this.setBatchInterval(this.state.config.batchInterval);
       } else {
         this.setEngine(this.state.config.engine);
-        this.setProperties(this.state.config.properties);
         this.setNumRecordsPreview(this.state.config.numOfRecordsPreview);
         this.setMaxConcurrentRuns(this.state.config.maxConcurrentRuns);
       }
@@ -429,7 +428,10 @@ class HydratorPlusPlusConfigStore {
         this.state.config.properties[backPressureKey] = true;
       }
     }
-    if (this.getEngine() === 'spark' || this.state.artifact.name === this.GLOBALS.etlDataStreams) {
+    if (
+      this.getEngine() === window.CaskCommon.PipelineConfigConstants.ENGINE_OPTIONS.SPARK ||
+      this.state.artifact.name === this.GLOBALS.etlDataStreams
+    ) {
       this.state.config.properties[numExecutorKey] = this.state.config.properties[numExecutorKey] || 1;
       if (this.state.config.properties.hasOwnProperty(numExecutorOldKey)) {
         let formattedNum = this.state.config.properties[numExecutorOldKey];

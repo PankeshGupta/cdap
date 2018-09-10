@@ -33,7 +33,7 @@ import {convertMapToKeyValuePairsObj, keyValuePairsHaveMissingValues} from 'comp
 import {getDefaultKeyValuePair} from 'components/KeyValuePairs/KeyValueStore';
 import uuidV4 from 'uuid/v4';
 import cloneDeep from 'lodash/cloneDeep';
-import {SPARK_EXECUTOR_INSTANCES, SPARK_BACKPRESSURE_ENABLED} from 'components/PipelineConfigurations/PipelineConfigConstants';
+import {SPARK_EXECUTOR_INSTANCES, SPARK_BACKPRESSURE_ENABLED, ENGINE_OPTIONS} from 'components/PipelineConfigurations/PipelineConfigConstants';
 
 const ACTIONS = {
   INITIALIZE_CONFIG: 'INITIALIZE_CONFIG',
@@ -75,10 +75,6 @@ const BATCH_INTERVAL_UNITS = [
 ];
 
 const NUM_EXECUTORS_OPTIONS = range(1, 11);
-const ENGINE_OPTIONS = {
-  MAPREDUCE: 'mapreduce',
-  SPARK: 'spark'
-};
 
 const DEFAULT_RUNTIME_ARGS = {
   'pairs': [getDefaultKeyValuePair()]

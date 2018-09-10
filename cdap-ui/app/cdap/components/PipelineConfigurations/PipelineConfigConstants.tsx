@@ -18,8 +18,14 @@ const SPARK_EXECUTOR_INSTANCES = 'system.spark.spark.executor.instances';
 const DEPRECATED_SPARK_MASTER = 'system.spark.spark.master';
 const SPARK_BACKPRESSURE_ENABLED = 'system.spark.spark.streaming.backpressure.enabled';
 
+const ENGINE_OPTIONS = {
+  MAPREDUCE: 'mapreduce',
+  SPARK: 'spark',
+};
+
 export {
   SPARK_EXECUTOR_INSTANCES,
   DEPRECATED_SPARK_MASTER,
   SPARK_BACKPRESSURE_ENABLED,
+  ENGINE_OPTIONS,
 };
