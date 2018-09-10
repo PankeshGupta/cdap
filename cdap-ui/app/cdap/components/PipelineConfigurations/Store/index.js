@@ -130,7 +130,7 @@ const getCustomConfigFromProperties = (properties = {}, isBatch) => {
 };
 
 const getCustomConfigForDisplay = (properties, engine, isBatch) => {
-  let currentCustomConfig = getCustomConfigFromProperties(properties, engine, isBatch);
+  let currentCustomConfig = getCustomConfigFromProperties(properties, isBatch);
   let customConfigForDisplay = {};
   for (let key in currentCustomConfig) {
     if (currentCustomConfig.hasOwnProperty(key)) {
