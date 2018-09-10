@@ -45,7 +45,11 @@ export default function Page500({message, stack}) {
             {
               // There is definitely a better way to do this :sigh:
             }
-            {T.translate(`${I18N_PREFIX}.suggestion1Part1`)} <a href={window.location.href}> {T.translate(`${I18N_PREFIX}.suggestion1Part2`)} </a> {T.translate(`${I18N_PREFIX}.suggestion1Part3`)}
+            {T.translate(`${I18N_PREFIX}.suggestion1Part1`)}
+            <a href={window.location.href}>
+              {T.translate(`${I18N_PREFIX}.suggestion1Part2`)}
+            </a>
+            {T.translate(`${I18N_PREFIX}.suggestion1Part3`)}
           </div>
           <div>{T.translate(`${I18N_PREFIX}.suggestion2`)}</div>
         </div>

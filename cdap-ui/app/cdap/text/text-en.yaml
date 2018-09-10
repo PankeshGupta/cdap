@@ -1684,6 +1684,7 @@ features:
   Page404:
     genericMessage: Sorry, we are not able to find the page you are looking for.
     entityMessage: Sorry, we are not able to find {entityType} "{entityName}"
+    mainTitle: Page not found
     manageLabel: Manage
     overviewLabel: Overview
     pipelinesMessage: Pipelines
