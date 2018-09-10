@@ -416,9 +416,9 @@ class HydratorPlusPlusConfigStore {
     return this.getConfig().properties;
   }
   setProperties(properties) {
-    let numExecutorKey = 'system.spark.spark.executor.instances';
-    let numExecutorOldKey = 'system.spark.spark.master';
-    let backPressureKey = 'system.spark.spark.streaming.backpressure.enabled';
+    const numExecutorKey = window.CaskCommon.PipelineConfigConstants.SPARK_EXECUTOR_INSTANCES;
+    const numExecutorOldKey = window.CaskCommon.PipelineConfigConstants.DEPRECATED_SPARK_MASTER;
+    const backPressureKey = window.CaskCommon.PipelineConfigConstants.SPARK_BACKPRESSURE_ENABLED;
     if (typeof properties !== 'undefined' && Object.keys(properties).length > 0) {
       this.state.config.properties = properties;
     } else {
@@ -444,7 +444,7 @@ class HydratorPlusPlusConfigStore {
     // We hide these two properties from showing up in key value pairs in realtime pipeline
     // In batch if the engine is spark we should not hide these properties. We should show
     // the custom properties
-    let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
+    let backendProperties = [window.CaskCommon.PipelineConfigConstants.SPARK_EXECUTOR_INSTANCES, window.CaskCommon.PipelineConfigConstants.SPARK_BACKPRESSURE_ENABLED];
     if (this.state.artifact.name !== this.GLOBALS.etlDataStreams) {
       backendProperties = [];
     }
@@ -505,13 +505,13 @@ class HydratorPlusPlusConfigStore {
     }
   }
   getNumExecutors() {
-    if (this.myHelpers.objectQuery(this.state, 'config', 'properties', 'system.spark.spark.executor.instances')) {
-      return this.state.config.properties['system.spark.spark.executor.instances'].toString();
+    if (this.myHelpers.objectQuery(this.state, 'config', 'properties', window.CaskCommon.PipelineConfigConstants.SPARK_EXECUTOR_INSTANCES)) {
+      return this.state.config.properties[window.CaskCommon.PipelineConfigConstants.SPARK_EXECUTOR_INSTANCES].toString();
     }
     return '1';
   }
   setNumExecutors(num) {
-    this.state.config.properties['system.spark.spark.executor.instances'] = num;
+    this.state.config.properties[window.CaskCommon.PipelineConfigConstants.SPARK_EXECUTOR_INSTANCES] = num;
   }
   getInstrumentation() {
     return this.getConfig().processTimingEnabled;

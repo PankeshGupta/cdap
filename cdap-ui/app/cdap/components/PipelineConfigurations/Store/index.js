@@ -33,6 +33,7 @@ import {convertMapToKeyValuePairsObj, keyValuePairsHaveMissingValues} from 'comp
 import {getDefaultKeyValuePair} from 'components/KeyValuePairs/KeyValueStore';
 import uuidV4 from 'uuid/v4';
 import cloneDeep from 'lodash/cloneDeep';
+import {SPARK_EXECUTOR_INSTANCES, SPARK_BACKPRESSURE_ENABLED} from 'components/PipelineConfigurations/PipelineConfigConstants';
 
 const ACTIONS = {
   INITIALIZE_CONFIG: 'INITIALIZE_CONFIG',
@@ -119,7 +120,7 @@ const DEFAULT_CONFIGURE_OPTIONS = {
 };
 
 const getCustomConfigFromProperties = (properties = {}, isBatch) => {
-  let backendProperties = ['system.spark.spark.streaming.backpressure.enabled', 'system.spark.spark.executor.instances'];
+  let backendProperties = [SPARK_BACKPRESSURE_ENABLED, SPARK_EXECUTOR_INSTANCES];
   if (isBatch) {
     backendProperties = [];
   }
@@ -358,13 +359,12 @@ const configure = (state = DEFAULT_CONFIGURE_OPTIONS, action = defaultAction) =>
       };
     }
     case ACTIONS.SET_NUM_EXECUTORS: {
-      let numExecutorsKeyName = 'system.spark.spark.executor.instances';
       let numExecutorsValue = action.payload.numExecutors;
       return {
         ...state,
         properties: {
           ...state.properties,
-          [numExecutorsKeyName]: numExecutorsValue
+          [SPARK_EXECUTOR_INSTANCES]: numExecutorsValue
         }
       };
     }

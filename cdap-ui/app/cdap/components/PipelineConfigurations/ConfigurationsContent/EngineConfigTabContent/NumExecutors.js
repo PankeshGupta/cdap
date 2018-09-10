@@ -22,13 +22,12 @@ import Popover from 'components/Popover';
 import SelectWithOptions from 'components/SelectWithOptions';
 import {NUM_EXECUTORS_OPTIONS, ACTIONS as PipelineConfigurationsActions} from 'components/PipelineConfigurations/Store';
 import T from 'i18n-react';
-
+import {SPARK_EXECUTOR_INSTANCES} from 'components/PipelineConfigurations/PipelineConfigConstants';
 const PREFIX = 'features.PipelineConfigurations.EngineConfig';
 
 const mapStateToProps = (state) => {
-  let numExecutorsKeyName = 'system.spark.spark.executor.instances';
   return {
-    numExecutors: state.properties[numExecutorsKeyName]
+    numExecutors: state.properties[SPARK_EXECUTOR_INSTANCES]
   };
 };
 const mapDispatchToProps = (dispatch) => {
